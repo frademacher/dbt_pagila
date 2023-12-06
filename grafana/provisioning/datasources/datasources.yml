@@ -1,0 +1,15 @@
+apiVersion: 1
+
+datasources:
+- name: pagila
+  uid: P8C5CE4F4D75331B9
+  type: postgres
+  access: proxy
+  url: pagila:5432
+  user: mart_read
+  isDefault: true
+  secureJsonData:
+    password: 123456
+  jsonData:
+    database: postgres
+    sslmode: disable

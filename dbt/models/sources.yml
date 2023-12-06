@@ -1,0 +1,34 @@
+
+version: 2
+
+sources:
+  - name: source
+    freshness:
+      warn_after: {count: 12, period: hour}
+      error_after: {count: 24, period: hour}
+    loaded_at_field: _etl_loaded_at
+    tables:
+      - name: film
+        columns:
+        - name: title
+          tests:
+            - unique
+            - not_null
+      - name: category
+        columns:
+          - name: name
+            tests:
+              - unique
+              - not_null
+      - name: film_category
+        columns:
+          - name: film_id
+            tests:
+              - relationships:
+                  to: source('source', 'film')
+                  field: film_id
+          - name: category_id
+            tests:
+                - relationships:
+                    to: source('source', 'category')
+                    field: category_id

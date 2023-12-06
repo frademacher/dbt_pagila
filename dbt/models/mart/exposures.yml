@@ -1,0 +1,14 @@
+version: 2
+
+exposures:
+  - name: film_share_per_category
+    label: Share of Films per Category
+    type: dashboard
+    maturity: high
+    url: http://localhost:3000/public-dashboards/{{ env_var('DBT_FILM_SHARE_DB_UID') }}
+    description: Share of films per category
+    depends_on:
+      - ref('films_to_categories')
+    owner:
+      name: John Doe
+      email: john@example.com

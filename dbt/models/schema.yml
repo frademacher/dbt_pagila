@@ -1,0 +1,25 @@
+
+version: 2
+
+models:
+  - name: staging_films
+    description: "Staging version of the Film table with the title column in regular capitalization"
+    columns:
+      - name: title
+        description: "The film title in regular capitalization"
+        tests:
+          - unique
+          - not_null
+  - name: films_to_categories
+    description: "Combine film and category"
+    columns:
+      - name: film
+        description: "The film title in regular capitalization"
+        tests:
+          - unique
+          - not_null
+      - name: category
+        description: "The category name"
+        tests:
+          - not_null
+          - dbt_utils.not_empty_string

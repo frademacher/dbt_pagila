@@ -1,0 +1,54 @@
+version: "3"
+volumes:
+  pgdata:
+  grafana-storage:
+services:
+  pagila:
+    image: postgres:13.2
+    container_name: pagila
+    environment:
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_USER: postgres
+    volumes:
+      - ./pagila/pagila-schema.sql:/docker-entrypoint-initdb.d/1-pagila-schema.sql
+      - ./pagila/pagila-data.sql:/docker-entrypoint-initdb.d/2-pagila-data.sql
+      - ./pagila/pagila-alter-schema.sql:/docker-entrypoint-initdb.d/3-pagila-alter-schema.sql
+      - ./pagila/create-mart-read.sql:/docker-entrypoint-initdb.d/4-create-mart-read.sql
+      - ./pagila/create-grafana.sql:/docker-entrypoint-initdb.d/5-create-grafana.sql
+      - pgdata:/var/lib/postgresql/data
+    expose:
+      - 5432
+    ports:
+      - 5432:5432
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4
+    restart: always
+    depends_on:
+      - pagila
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    volumes:
+      - ./pagila/pgpass:/home/pgadmin/.pgpass
+      - ./pagila/servers.json:/pgadmin4/servers.json
+    ports:
+      - 5050:80
+  grafana:
+    image: grafana/grafana-oss
+    container_name: grafana
+    restart: unless-stopped
+    depends_on:
+      - pagila
+    environment:
+      GF_DATABASE_TYPE: postgres
+      GF_DATABASE_HOST: pagila:5432
+      GF_DATABASE_NAME: grafana
+      GF_DATABASE_USER: grafana
+      GF_DATABASE_PASSWORD: 123456
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+      - grafana-storage:/var/lib/grafana
+    ports:
+      - 3000:3000

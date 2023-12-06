@@ -1,0 +1,9 @@
+.vscode/
+dbt/target/
+dbt/dbt_packages/
+dbt/logs/
+logs/
+pagila/logs/
+*.code-workspace
+.user.yml
+dbt/package-lock.yml

@@ -1,0 +1,39 @@
+
+name: 'dbt_pagila'
+version: '1.0.0'
+config-version: 2
+
+# This setting configures which "profile" dbt uses for this project.
+profile: 'dbt_pagila'
+
+# These configurations specify where dbt should look for different types of files.
+# The `model-paths` config, for example, states that models in this project can be
+# found in the "models/" directory. You probably won't need to change these!
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:         # directories to be removed by `dbt clean`
+  - "target"
+  - "dbt_packages"
+
+
+# Configuring models
+# Full documentation: https://docs.getdbt.com/docs/configuring-models
+
+# Config indicated by + applies to all files under models/${MODEL_NAME}/
+models:
+  dbt_pagila:
+    mart:
+      +grants:
+        select: ['mart_read']
+      +schema: mart
+    staging:
+      +schema: staging
+
+# Grant schema usage because dbt currently only supports granting of *selects* on *tables* (see
+# models.dbt_pagila.mart.grants.select)
+on-run-start: grant usage on schema source_mart to mart_read;

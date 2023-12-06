@@ -1,0 +1,17 @@
+{
+    "Servers": {
+        "1": {
+            "Name": "localhost",
+            "Group": "Servers",
+            "Host": "pagila",
+            "Port": 5432,
+            "MaintenanceDB": "postgres",
+            "Username": "postgres",
+            "KerberosAuthentication": false,
+            "ConnectionParameters": {
+                "sslmode": "prefer",
+                "passfile": "/home/pgadmin/.pgpass"
+            }
+        }
+    }
+}
